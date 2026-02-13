@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Gillian 🖤</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0a0a;
+      --glass-card: rgba(30, 30, 30, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent-pink: #ff4d80;
+      --accent-glow: rgba(255, 77, 128, 0.4);
+      --text-main: #ffffff;
+      --text-sub: #b3b3b3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, var(--bg-dark) 80%);
+      color: var(--text-main);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- BACKGROUND ANIMATION --- */
+    .bg-hearts {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .floating-heart {
+      position: absolute;
+      color: var(--accent-pink);
+      opacity: 0.15;
+      animation: float 15s infinite linear;
+      font-size: 20px;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.2; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* --- CONTAINER --- */
+    .container {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 600px);
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* --- THE ASK CARD (Screen 1) --- */
+    .ask-card {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      padding: 50px 30px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      transition: all 0.5s ease;
+      transform: scale(1);
+    }
+
+    .ask-card.hidden {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+      display: none;
+    }
+
+    .sticker {
+      font-size: 80px;
+      margin-bottom: 20px;
+      display: block;
+      animation: bounce 2s infinite ease-in-out;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(28px, 5vw, 42px);
+      margin-bottom: 12px;
+      line-height: 1.2;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .sub-text {
+      color: var(--text-sub);
+      font-size: 16px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+      height: 60px; /* Space for buttons to move */
+    }
+
+    button {
+      border: none;
+      padding: 16px 36px;
+      border-radius: 99px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-yes {
+      background: var(--accent-pink);
+      color: white;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .btn-yes:hover { transform: scale(1.05); box-shadow: 0 12px 30px var(--accent-glow); }
+
+    .btn-no {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* --- THE REVEAL CONTENT (Screen 2) --- */
+    .content-area {
+      display: none; /* Hidden initially */
+      animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      padding-bottom: 80px;
+    }
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      background: rgba(25, 25, 25, 0.6);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-reveal {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header-reveal h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 32px;
+      color: var(--accent-pink);
+    }
+    .header-reveal p { color: var(--text-sub); }
+
+    /* Spotify Style Music Player */
+    .music-player {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(145deg, #1e1e1e, #141414);
+      padding: 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .album-art {
+      width: 50px;
+      height: 50px;
+      background: #333;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .track-info { flex: 1; }
+    .track-name { font-weight: 700; font-size: 14px; display: block; }
+    .track-artist { font-size: 12px; color: var(--text-sub); }
+    .play-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--accent-pink);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.03);
+      padding: 16px;
+      border-radius: 18px;
+      text-align: center;
+    }
+    .stat-label { font-size: 12px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-val { font-size: 18px; font-weight: 700; margin-top: 4px; }
+
+    /* Timeline Vertical */
+    .timeline {
+      padding-left: 20px;
+      border-left: 2px solid rgba(255, 77, 128, 0.3);
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-pink);
+    }
+    .t-date { color: var(--accent-pink); font-size: 12px; font-weight: 700; }
+    .t-desc { font-size: 14px; color: #ddd; margin-top: 2px; }
+
+    /* POLAROID STYLES */
+    .polaroid-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px; /* More space between photos */
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .polaroid {
+      background: white;
+      padding: 12px 12px 30px 12px;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 280px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+    .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
+    .polaroid img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      background: #eee;
+      border-radius: 2px;
+    }
+    .polaroid-caption {
+      color: #333;
+      font-family: 'Fredoka', cursive;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    
+    .photo-section-title {
+        text-align: center;
+        margin: 30px 0 20px;
+        font-size: 18px;
+        color: var(--accent-pink);
+        font-family: 'Fredoka', sans-serif;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-top: 40px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-hearts" id="bgHearts"></div>
+
+  <div class="container">
+
+    <div class="ask-card" id="askCard">
+      <div class="sticker">🐈‍⬛</div>
+      <div style="text-transform: uppercase; letter-spacing: 2px; font-size: 10px; color: var(--accent-pink); font-weight: 700; margin-bottom: 10px;">For Gillian Trishabelle</div>
+      <h1>Will you be my Valentine my DIGIBABE?</h1>
+      <p class="sub-text">
+        I made this in "Dark Mode" because I know it's your aesthetic. 
+        <br>One question, one correct answer. 🖤
+      </p>
+
+      <div class="btn-group">
+        <button class="btn-yes" id="yesBtn">YES! 💘</button>
+        <button class="btn-no" id="noBtn">No</button>
+      </div>
+    </div>
+
+    <div class="content-area" id="contentArea">
+      
+      <div class="header-reveal">
+        <div class="sticker">😭💍</div>
+        <h2>She said YES!</h2>
+        <p>Officially the best Valentine's ever.</p>
+      </div>
+
+      <div class="music-player">
+        <div class="album-art">🎵</div>
+        <div class="track-info">
+          <span class="track-name">My Love Song for YOU</span>
+          <span class="track-artist">Click play to listen 🖤</span>
+        </div>
+        <button class="play-btn" id="playBtn">▶</button>
+      </div>
+
+      <div class="section">
+        <h3 style="margin-bottom: 15px; font-size: 16px;">🖤 Why you're my favorite</h3>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Birthday</div>
+            <div class="stat-val">Sept 21</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Fav Color</div>
+            <div class="stat-val">Black 🖤</div>
+          </div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-label"> Our Babies</div>
+            <div class="stat-val">Dino, Nami & Potchi 🐾</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 style="margin-bottom: 15px; font-size: 16px;">⏳ How it started</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="t-date">NOV 24</div>
+            <div class="t-desc">Our first date (Core memory 🔓)</div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-date">DEC 08</div>
+            <div class="t-desc">First kiss 🥺</div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-date">JAN 15, 2024</div>
+            <div class="t-desc">The day you officially became mine 💍</div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-date">TODAY</div>
+            <div class="t-desc">My Valentine, forever.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="photo-section-title">📸 Us</h3>
+      <div class="polaroid-stack">
+        <div class="polaroid" style="transform: rotate(-2deg);">
+          <img src="us.jpg" alt="Us" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+us.jpg'">
+          <div class="polaroid-caption">Us 🖤</div>
+        </div>
+        
+        <div class="polaroid" style="transform: rotate(3deg);">
+          <img src="us2.jpg" alt="Cute" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+us2.jpg'">
+          <div class="polaroid-caption">You're the cutest 🥺</div>
+        </div>
+      </div>
+
+
+      <h3 class="photo-section-title">🖤 Just You (My pretty Digibabe)</h3>
+      <div class="polaroid-stack">
+        <div class="polaroid" style="transform: rotate(4deg);">
+            <img src="her1.jpg" alt="Gillian 1" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+her1.jpg'">
+            <div class="polaroid-caption">Literal goddess 🛐</div>
+        </div>
+
+        <div class="polaroid" style="transform: rotate(-3deg);">
+             <img src="her2.jpg" alt="Gillian 2" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+her2.jpg'">
+            <div class="polaroid-caption">My favorite view 🖤</div>
+        </div>
+
+        <div class="polaroid" style="transform: rotate(2deg);">
+             <img src="her3.jpg" alt="Gillian 3" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+her3.jpg'">
+            <div class="polaroid-caption">So pretty it hurts 🥺</div>
+        </div>
+      </div>
+
+
+      <h3 class="photo-section-title">🐾 The Babies</h3>
+      <div class="polaroid-stack">
+        <div class="polaroid" style="transform: rotate(-4deg);">
+            <img src="dino.jpg" alt="Dino" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+dino.jpg'">
+            <div class="polaroid-caption">Dino 🐱 (CHABA)</div>
+        </div>
+
+        <div class="polaroid" style="transform: rotate(3deg);">
+             <img src="nami.jpg" alt="Nami" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+nami.jpg'">
+            <div class="polaroid-caption">Nami 🐱 (CHOLET)</div>
+        </div>
+
+        <div class="polaroid" style="transform: rotate(-2deg);">
+             <img src="potchi.jpg" alt="Potchi" onerror="this.src='https://placehold.co/400x500/222/ff4d80?text=Add+potchi.jpg'">
+            <div class="polaroid-caption">Potchi 🐶 (BAHO)</div>
+        </div>
+      </div>
+      <div class="footer-note">
+        Screenshot this and send it to me 💌
+      </div>
+
+    </div>
+
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+  
+    const bgHearts = document.getElementById('bgHearts');
+    const symbols = ['🖤', '💘', '✨', '🧸'];
+    
+    for(let i=0; i<15; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      heart.style.animationDelay = (Math.random() * 5) + 's';
+      bgHearts.appendChild(heart);
+    }
+
+
+    const askCard = document.getElementById('askCard');
+    const contentArea = document.getElementById('contentArea');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const playBtn = document.getElementById('playBtn');
+    const audio = document.getElementById('bgMusic');
+
+ 
+    noBtn.addEventListener('mouseover', moveNoBtn);
+    noBtn.addEventListener('touchstart', moveNoBtn); 
+
+    function moveNoBtn() {
+      const x = (Math.random() - 0.5) * 150;
+      const y = (Math.random() - 0.5) * 150;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+
+    yesBtn.addEventListener('click', () => {
+
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff4d80', '#ffffff', '#000000']
+      });
+
+      askCard.classList.add('hidden');
+      setTimeout(() => {
+        askCard.style.display = 'none';
+        contentArea.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 500);
+    });
+
+  
+    let isPlaying = false;
+    playBtn.addEventListener('click', () => {
+      if(isPlaying) {
+        audio.pause();
+        playBtn.innerText = "▶";
+      } else {
+        audio.play().catch(e => alert("Please tap anywhere first!")); 
+        playBtn.innerText = "⏸";
+      }
+      isPlaying = !isPlaying;
+    });
+
+  </script>
+</body>
+</html>
